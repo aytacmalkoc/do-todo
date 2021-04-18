@@ -16,51 +16,56 @@ import todoData from "../assets/data/todos";
 
 Feather.loadFont();
 
-const App = () => {
-  const [rowIndex, setRowIndex] = useState(null);
-  const [todos, setTodos] = useState(todoData);
-
-  const onSwipeOpen = (index) => {
-    setRowIndex(index);
+export default class App extends React.Component {
+  state = {
+    rowIndex: null,
+    todos: todoData,
+    fontsLoaded: false,
   };
 
-  const onSwipeClose = (index) => {
-    if (index === rowIndex) {
-      setRowIndex(null);
-    }
-  };
-
-  const swipeoutLeftBtns = [
+  _swipeoutLeftBtns = [
     {
       text: <Feather name="check" size={34} color={colors.white} />,
       backgroundColor: colors.green,
       color: colors.white,
       onPress: () => {
-        console.log(rowIndex);
+        console.log(this.state.rowIndex);
       },
     },
   ];
 
-  const swipeoutRightBtns = [
+  _swipeoutRightBtns = [
     {
       text: <Feather name="trash" size={34} color={colors.white} />,
       backgroundColor: colors.red,
       color: colors.white,
       onPress: () => {
-        setTodos(todos.filter((todo) => todo.id != rowIndex));
+        this.setState({
+          todos: this.state.todos.filter(
+            (todo) => todo.id != this.state.rowIndex
+          ),
+        });
       },
     },
   ];
 
-  const todoItem = ({ item }) => {
+  _onSwipeOpen = (index) => this.setState({ rowIndex: index });
+
+  _onSwipeClose = (index) => {
+    if (index === this.state.rowIndex) {
+      this.setState({ rowIndex: null });
+    }
+  };
+
+  _todoItem = ({ item }) => {
     return (
       <Swipeout
-        left={swipeoutLeftBtns}
-        right={swipeoutRightBtns}
+        left={this._swipeoutLeftBtns}
+        right={this._swipeoutRightBtns}
         style={styles.todoItemSwipe}
         autoClose={true}
-        onOpen={() => onSwipeOpen(item.id)}
-        onClose={() => onSwipeClose(item.id)}
+        onOpen={() => this._onSwipeOpen(item.id)}
+        onClose={() => this._onSwipeClose(item.id)}
       >
         <TouchableOpacity>
           <View style={styles.todoItemWrapper}>
@@ -73,37 +78,37 @@ const App = () => {
     );
   };
 
-  return (
-    <View style={styles.container}>
-      <ScrollView>
-        <SafeAreaView>
-          {/* Header */}
-          <View style={styles.headerWrapper}>
-            <Text style={styles.headerTitle}>Do Todo</Text>
-            <View style={styles.headerIcon}>
-              <Feather name="plus" size={25} color={colors.white} />
+  render() {
+    return (
+      <View style={styles.container}>
+        <ScrollView>
+          <SafeAreaView>
+            {/* Header */}
+            <View style={styles.headerWrapper}>
+              <Text style={styles.headerTitle}>Title</Text>
+              <View style={styles.headerIcon}>
+                <Feather name="plus" size={25} color={colors.white} />
+              </View>
             </View>
-          </View>
 
-          {/* Todo Items */}
-          <View style={styles.todoWrapper}>
-            <FlatList
-              data={todos}
-              renderItem={todoItem}
-              keyExtractor={(todo) => todo.id}
-              horizontal={false}
-              refreshing={true}
-            />
-          </View>
-        </SafeAreaView>
-      </ScrollView>
-      <StatusBar
-        barStyle="dark-content"
-        animated={true}
-        backgroundColor={colors.white}
-      />
-    </View>
-  );
-};
-
-export default App;
+            {/* Todo Items */}
+            <View style={styles.todoWrapper}>
+              <FlatList
+                data={this.state.todos}
+                renderItem={this._todoItem}
+                keyExtractor={(todo) => todo.id}
+                horizontal={false}
+                refreshing={true}
+              />
+            </View>
+          </SafeAreaView>
+        </ScrollView>
+        <StatusBar
+          barStyle="dark-content"
+          animated={true}
+          backgroundColor={colors.white}
+        />
+      </View>
+    );
+  }
+}
