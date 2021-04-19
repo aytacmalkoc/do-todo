@@ -1,10 +1,10 @@
 # Do-Todo
 
-# Credits
+## Credits
 
+- [UX Design](https://ui8.net/juan-williman-65f120/products/honest-ux-design-system)
 
-
-# License
+## License
 
 Copyright (c) 2021 Aytac Malkoc
 
