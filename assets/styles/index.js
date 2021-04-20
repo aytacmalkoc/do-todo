@@ -38,10 +38,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 27,
   },
   todoItemSwipe: {
-    backgroundColor: colors.todoBackground,
+    backgroundColor: colors.red,
+    width: 95,
     height: 148,
     borderRadius: 28,
     marginBottom: 24,
+    marginLeft: 14,
+    justifyContent: "center",
+    alignItems: "center",
   },
   todoItemWrapper: {
     backgroundColor: colors.todoBackground,
@@ -74,15 +78,37 @@ const styles = StyleSheet.create({
   },
   newTodoTitleInput: {
     fontSize: 14,
+    paddingBottom: 14,
+    borderBottomColor: colors.pink,
+    borderBottomWidth: 0.2,
   },
   newTodoSubTitleInput: {
     fontSize: 14,
-    marginTop: 10,
+    paddingBottom: 14,
+    marginTop: 25,
+    borderBottomColor: colors.pink,
+    borderBottomWidth: 0.2,
   },
   newTodoContentInput: {
     fontSize: 14,
-    marginTop: 10,
+    marginTop: 25,
     height,
+  },
+  modalBackground: {
+    flex: 1,
+    alignItems: "center",
+    flexDirection: "column",
+    justifyContent: "space-around",
+    backgroundColor: "#00000040",
+  },
+  activityIndicatorWrapper: {
+    backgroundColor: "#FFFFFF",
+    height: 100,
+    width: 100,
+    borderRadius: 10,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-around",
   },
 });
 
