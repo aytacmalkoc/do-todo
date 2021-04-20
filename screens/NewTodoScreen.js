@@ -1,14 +1,13 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
+  ActivityIndicator,
+  Modal,
   SafeAreaView,
   StatusBar,
   Text,
   TextInput,
   TouchableOpacity,
   View,
-  Dimensions,
-  Alert,
 } from "react-native";
 import * as SQLite from "expo-sqlite";
 import Feather from "react-native-vector-icons/Feather";
@@ -23,8 +22,10 @@ const NewTodoScreen = ({ navigation }) => {
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
   const [content, setContent] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const saveTodo = async () => {
+    setLoading(true);
     db.transaction((txn) => {
       txn.executeSql(
         "CREATE TABLE IF NOT EXISTS todos(id INTEGER PRIMARY KEY  AUTOINCREMENT, title TEXT, subtitle TEXT, content TEXT, is_done BOOLEAN DEFAULT 0 , created_at DATETIME DEFAULT current_timestamp)",
@@ -34,10 +35,8 @@ const NewTodoScreen = ({ navigation }) => {
         "INSERT INTO todos(title, subtitle, content) VALUES(?, ?, ?)",
         [title, subtitle, content],
         (tx, results) => {
-          // console.log(`results => ${results.rowsAffected}`);
-
           if (results.rowsAffected > 0) {
-            // Alert.alert("eklendi");
+            setLoading(false);
             navigation.navigate("Home");
           }
         }
@@ -47,15 +46,32 @@ const NewTodoScreen = ({ navigation }) => {
 
   return (
     <View style={[styles.container]}>
+      <Modal
+        transparent={true}
+        animationType={"none"}
+        visible={loading}
+        onRequestClose={() => {
+          console.log("close modal");
+        }}
+      >
+        <View style={styles.modalBackground}>
+          <View style={styles.activityIndicatorWrapper}>
+            <ActivityIndicator animating={loading} />
+          </View>
+        </View>
+      </Modal>
       <SafeAreaView>
         <View style={styles.headerWrapper}>
-          <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Home")}
+            hitSlop={{ top: 40, left: 40, right: 40, bottom: 40 }}
+          >
             <Text style={{ color: colors.red }}>iptal</Text>
           </TouchableOpacity>
           <Text style={[styles.headerTitle, { fontSize: 21 }]}>Yeni Todo</Text>
           <TouchableOpacity
             onPress={saveTodo}
-            hitSlop={{ top: 20, left: 20, right: 20, bottom: 20 }}
+            hitSlop={{ top: 40, left: 40, right: 40, bottom: 40 }}
           >
             <Text style={{ color: colors.red }}>kaydet</Text>
           </TouchableOpacity>
@@ -77,6 +93,7 @@ const NewTodoScreen = ({ navigation }) => {
           />
           <TextInput
             style={styles.newTodoContentInput}
+            placeholder="içerik"
             multiline={true}
             numberOfLines={50}
             value={content}
