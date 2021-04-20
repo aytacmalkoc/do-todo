@@ -1,6 +1,9 @@
 import { StyleSheet } from "react-native";
 import Constants from "expo-constants";
 import colors from "../colors";
+import { Dimensions } from "react-native";
+
+const { width, height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
@@ -20,10 +23,13 @@ const styles = StyleSheet.create({
     fontSize: 43,
   },
   headerIcon: {
-    width: 55,
-    height: 55,
-    backgroundColor: colors.black,
-    borderRadius: 55,
+    width: 35,
+    height: 35,
+    backgroundColor: colors.fff,
+    shadowColor: colors.pink,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.9,
+    elevation: 10,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -32,13 +38,13 @@ const styles = StyleSheet.create({
     marginHorizontal: 27,
   },
   todoItemSwipe: {
-    backgroundColor: "#F7F7F7",
+    backgroundColor: colors.todoBackground,
     height: 148,
     borderRadius: 28,
     marginBottom: 24,
   },
   todoItemWrapper: {
-    backgroundColor: "#F7F7F7",
+    backgroundColor: colors.todoBackground,
     paddingLeft: 27,
     paddingRight: 24,
     borderRadius: 28,
@@ -62,6 +68,21 @@ const styles = StyleSheet.create({
     opacity: 0.5,
     paddingTop: 10,
     paddingBottom: 22,
+  },
+  newTodoWrapper: {
+    padding: 27,
+  },
+  newTodoTitleInput: {
+    fontSize: 14,
+  },
+  newTodoSubTitleInput: {
+    fontSize: 14,
+    marginTop: 10,
+  },
+  newTodoContentInput: {
+    fontSize: 14,
+    marginTop: 10,
+    height,
   },
 });
 
