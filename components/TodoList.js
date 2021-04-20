@@ -3,6 +3,7 @@ import { View, FlatList, Text } from "react-native";
 import TodoItem from "./TodoItem";
 import styles from "../assets/styles";
 import * as SQLite from "expo-sqlite";
+import LottieView from "lottie-react-native";
 
 const db = SQLite.openDatabase("database.db");
 
@@ -11,32 +12,42 @@ const TodoList = () => {
   const [empty, setEmpty] = useState([]);
 
   useEffect(() => {
-    db.transaction((tx) => {
-      tx.executeSql("SELECT * FROM todos", [], (tx, results) => {
-        var temp = [];
-        for (let i = 0; i < results.rows.length; i++) {
-          temp.push(results.rows.item(i));
-        }
+    db.transaction((txn) => {
+      txn.executeSql(
+        "SELECT * FROM todos WHERE is_done = 0 ORDER BY created_at DESC",
+        [],
+        (tx, { rows }) => {
+          setTodos(rows._array);
 
-        setTodos(temp);
+          // console.log(rows._array);
 
-        if (results.rows.length >= 1) {
-          setEmpty(false);
-        } else {
-          setEmpty(true);
+          rows.length >= 1 ? setEmpty(false) : setEmpty(true);
         }
-      });
+      );
     });
-  }, []);
+  }, [todos]);
 
   const renderItem = ({ item }) => {
     return <TodoItem todo={item} />;
   };
 
-  const emptyItem = (isEmpty) => {
+  const emptyItem = () => {
     return (
-      <View style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
-        <Text>Boş data</Text>
+      <View
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          flex: 1,
+        }}
+      >
+        <LottieView
+          style={{ width: 300, height: 300 }}
+          autoPlay={true}
+          loop={true}
+          cacheStrategy="strong"
+          source={require("../assets/json/confused-animation.json")}
+        />
+        <Text>burası çok sessiz..</Text>
       </View>
     );
   };
@@ -44,7 +55,7 @@ const TodoList = () => {
   return (
     <View style={styles.todoWrapper}>
       {empty ? (
-        emptyItem(empty)
+        emptyItem()
       ) : (
         <FlatList
           data={todos}

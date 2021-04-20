@@ -1,20 +1,45 @@
 import React, { useState } from "react";
 import styles from "../assets/styles";
 import Swipeout from "react-native-swipeout";
-import { TouchableOpacity, View, Text } from "react-native";
+import {
+  TouchableOpacity,
+  View,
+  Text,
+  Alert,
+  ToastAndroid,
+} from "react-native";
 import Feather from "react-native-vector-icons/Feather";
 import colors from "../assets/colors";
+import * as SQLite from "expo-sqlite";
+import * as Device from "expo-device";
+
+const db = SQLite.openDatabase("database.db");
 
 Feather.loadFont();
 
 const TodoItem = ({ todo }) => {
-  const [rowIndex, setRowIndex] = useState(todo.id);
-
   const swipeLeft = [
     {
       text: <Feather name="check" size={34} color={colors.white} />,
       backgroundColor: colors.green,
       color: colors.white,
+      onPress: () => {
+        db.transaction((txn) => {
+          txn.executeSql(
+            "UPDATE todos SET is_done=? WHERE id=?",
+            [1, todo.id],
+            (tx, results) => {
+              if (Device.osName == "Android") {
+                ToastAndroid.showWithGravityAndOffset(
+                  `${todo.title} tamamlandı.`,
+                  ToastAndroid.LONG,
+                  ToastAndroid.TOP
+                );
+              }
+            }
+          );
+        });
+      },
     },
   ];
 
@@ -24,7 +49,22 @@ const TodoItem = ({ todo }) => {
       backgroundColor: colors.red,
       color: colors.white,
       onPress: () => {
-        setTodos(todos.filter((item) => item.id != todo.id));
+        db.transaction((txn) => {
+          txn.executeSql(
+            "DELETE FROM todos WHERE id=?",
+            [todo.id],
+            (tx, results) => {
+              if (results.rowsAffected > 0) {
+                Alert.alert("Başarılı", "Todo başarıyla silindi", [
+                  {
+                    text: "Tamam",
+                    style: "cancel",
+                  },
+                ]);
+              }
+            }
+          );
+        });
       },
     },
   ];
