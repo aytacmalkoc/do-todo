@@ -1,5 +1,12 @@
-import React from "react";
-import { SafeAreaView, ScrollView, StatusBar, Text, View } from "react-native";
+import React, { useState } from "react";
+import {
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Feather from "react-native-vector-icons/Feather";
 import styles from "../assets/styles";
 import colors from "../assets/colors";
@@ -7,7 +14,7 @@ import TodoList from "../components/TodoList";
 
 Feather.loadFont();
 
-const App = () => {
+const Home = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -15,12 +22,16 @@ const App = () => {
           {/* Header */}
           <View style={styles.headerWrapper}>
             <Text style={styles.headerTitle}>Do Todo</Text>
-            <View style={styles.headerIcon}>
-              <Feather name="plus" size={25} color={colors.white} />
-            </View>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("NewTodo")}
+              hitSlop={{ top: 20, right: 20, bottom: 20, left: 20 }}
+            >
+              <View style={styles.headerIcon}>
+                <Feather name="plus" size={25} color={colors.red} />
+              </View>
+            </TouchableOpacity>
           </View>
 
-          {/* Todo Items */}
           <TodoList />
         </SafeAreaView>
       </ScrollView>
@@ -33,4 +44,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default Home;
