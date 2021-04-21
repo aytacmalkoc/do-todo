@@ -1,6 +1,6 @@
 import "react-native-gesture-handler";
-import React from "react";
-import * as Font from "expo-font";
+import React, { useState } from "react";
+// import * as Font from "expo-font";
 import { NavigationContainer } from "@react-navigation/native";
 import {
   createStackNavigator,
@@ -15,37 +15,28 @@ import NewTodoScreen from "./screens/NewTodoScreen";
 // assets
 import IntroSlider from "./components/IntroSlider";
 
+import {
+  useFonts,
+  Nunito_400Regular,
+  Nunito_700Bold,
+} from "@expo-google-fonts/dev";
+import AppLoading from "expo-app-loading";
+
 const Stack = createStackNavigator();
 
-const fonts = {
-  FuturaBold: require("./assets/fonts/Futura-Bold.ttf"),
-  LessRegular: require("./assets/fonts/Less-Regular.ttf"),
-  RalewayRegular: require("./assets/fonts/Raleway-Regular.ttf"),
-};
+const App = () => {
+  const [showRealApp, setShowRealApp] = useState(false);
 
-export default class App extends React.Component {
-  state = {
-    fontsLoaded: false,
-    showRealApp: false,
-  };
+  const [fontsLoaded] = useFonts({
+    Nunito_400Regular,
+    Nunito_700Bold,
+  });
 
-  async _loadFontsAsync() {
-    await Font.loadAsync(fonts);
-    this.setState({
-      fontsLoaded: true,
-    });
-  }
-
-  componentDidMount() {
-    this._loadFontsAsync();
-  }
-
-  render() {
-    if (!this.state.showRealApp) {
-      return (
-        <IntroSlider onChange={(res) => this.setState({ showRealApp: res })} />
-      );
-    }
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  } else if (!showRealApp) {
+    return <IntroSlider onChange={(res) => setShowRealApp(res)} />;
+  } else {
     return (
       <>
         <NavigationContainer>
@@ -79,4 +70,6 @@ export default class App extends React.Component {
       </>
     );
   }
-}
+};
+
+export default App;

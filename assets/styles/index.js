@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     padding: 27,
   },
   headerTitle: {
-    fontFamily: "FuturaBold",
+    fontFamily: "Nunito_700Bold",
     fontSize: 43,
   },
   headerIcon: {
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
   },
   todoItemSubtitle: {
     color: colors.grayDark,
-    fontFamily: "LessRegular",
+    fontFamily: "Nunito_400Regular",
     fontSize: 17,
     paddingTop: 4,
   },
