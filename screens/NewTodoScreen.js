@@ -101,11 +101,6 @@ const NewTodoScreen = ({ navigation }) => {
           />
         </View>
       </SafeAreaView>
-      <StatusBar
-        barStyle="dark-content"
-        animated={true}
-        backgroundColor={colors.white}
-      />
     </View>
   );
 };
